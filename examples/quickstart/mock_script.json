@@ -1,0 +1,70 @@
+{
+  "actions": {
+    "write-goodbye": [
+      {
+        "action": {
+          "args": {
+            "content": "goodbye",
+            "path": "greetings/goodbye.txt"
+          },
+          "tool": "file_write"
+        },
+        "done": false,
+        "large": "correct",
+        "small": "disagree",
+        "tokens_in": 800,
+        "tokens_out": 200
+      },
+      {
+        "action": {
+          "args": {
+            "path": "greetings/goodbye.txt"
+          },
+          "tool": "file_read"
+        },
+        "done": false,
+        "large": "correct",
+        "small": "correct",
+        "tokens_in": 600,
+        "tokens_out": 100
+      }
+    ],
+    "write-hello": [
+      {
+        "action": {
+          "args": {
+            "content": "hello",
+            "path": "greetings/hello.txt"
+          },
+          "tool": "file_write"
+        },
+        "done": false,
+        "large": "correct",
+        "small": "correct",
+        "tokens_in": 800,
+        "tokens_out": 200
+      },
+      {
+        "action": {
+          "args": {
+            "path": "greetings/hello.txt"
+          },
+          "tool": "file_read"
+        },
+        "done": false,
+        "large": "correct",
+        "small": "correct",
+        "tokens_in": 600,
+        "tokens_out": 100
+      }
+    ]
+  },
+  "plan_tokens_in": 400,
+  "plan_tokens_out": 300,
+  "plans": {
+    "Write two greeting files": "{\n  \"tasks\": [\n    {\n      \"id\": \"write-hello\",\n      \"title\": \"Write greetings/hello.txt\",\n      \"kind\": \"greeting\",\n      \"params\": {\n        \"word\": \"hello\"\n      },\n      \"depends_on\": [],\n      \"steps\": [\n        {\n          \"kind\": \"write\",\n          \"description\": \"write greetings/hello.txt\"\n        },\n        {\n          \"kind\": \"check\",\n          \"description\": \"read it back\"\n        }\n      ],\n      \"acceptance_commands\": [\n        [\n          \"python\",\n          \"-m\",\n          \"pytest\",\n          \"-q\",\n          \"-p\",\n          \"no:cacheprovider\",\n          \"tests/test_greetings.py::test_hello\"\n        ]\n      ]\n    },\n    {\n      \"id\": \"write-goodbye\",\n      \"title\": \"Write greetings/goodbye.txt\",\n      \"kind\": \"greeting\",\n      \"params\": {\n        \"word\": \"goodbye\"\n      },\n      \"depends_on\": [\n        \"write-hello\"\n      ],\n      \"steps\": [\n        {\n          \"kind\": \"write\",\n          \"description\": \"write greetings/goodbye.txt\"\n        },\n        {\n          \"kind\": \"check\",\n          \"description\": \"read it back\"\n        }\n      ],\n      \"acceptance_commands\": [\n        [\n          \"python\",\n          \"-m\",\n          \"pytest\",\n          \"-q\",\n          \"-p\",\n          \"no:cacheprovider\",\n          \"tests/test_greetings.py::test_goodbye\"\n        ]\n      ]\n    }\n  ]\n}"
+  },
+  "summary_text": "Summary of archived memory entries.",
+  "summary_tokens_in": 200,
+  "summary_tokens_out": 60
+}

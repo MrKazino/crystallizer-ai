@@ -1,0 +1,442 @@
+{
+  "$defs": {
+    "BudgetConfig": {
+      "additionalProperties": false,
+      "description": "Hard per-run spending limits; 0 disables a limit.",
+      "properties": {
+        "max_cost_per_run": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Max Cost Per Run",
+          "type": "number"
+        },
+        "max_model_calls_per_run": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Model Calls Per Run",
+          "type": "integer"
+        },
+        "max_tokens_per_run": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Tokens Per Run",
+          "type": "integer"
+        }
+      },
+      "title": "BudgetConfig",
+      "type": "object"
+    },
+    "ContextConfig": {
+      "additionalProperties": false,
+      "description": "Context budget. Estimator: ``ceil(len(text) / chars_per_token)``.",
+      "properties": {
+        "budget_tokens": {
+          "default": 6000,
+          "minimum": 1,
+          "title": "Budget Tokens",
+          "type": "integer"
+        },
+        "chars_per_token": {
+          "default": 4,
+          "minimum": 1,
+          "title": "Chars Per Token",
+          "type": "integer"
+        },
+        "memory_items": {
+          "default": 5,
+          "minimum": 0,
+          "title": "Memory Items",
+          "type": "integer"
+        },
+        "trace_items": {
+          "default": 5,
+          "minimum": 0,
+          "title": "Trace Items",
+          "type": "integer"
+        }
+      },
+      "title": "ContextConfig",
+      "type": "object"
+    },
+    "CostConfig": {
+      "additionalProperties": false,
+      "description": "Prices per million tokens. Defaults are illustrative units, not real prices.",
+      "properties": {
+        "large_in": {
+          "default": 3.0,
+          "minimum": 0,
+          "title": "Large In",
+          "type": "number"
+        },
+        "large_out": {
+          "default": 15.0,
+          "minimum": 0,
+          "title": "Large Out",
+          "type": "number"
+        },
+        "small_in": {
+          "default": 0.25,
+          "minimum": 0,
+          "title": "Small In",
+          "type": "number"
+        },
+        "small_out": {
+          "default": 1.25,
+          "minimum": 0,
+          "title": "Small Out",
+          "type": "number"
+        }
+      },
+      "title": "CostConfig",
+      "type": "object"
+    },
+    "MemoryConfig": {
+      "additionalProperties": false,
+      "description": "Memory scoring.",
+      "properties": {
+        "half_life_days": {
+          "default": 30.0,
+          "exclusiveMinimum": 0,
+          "title": "Half Life Days",
+          "type": "number"
+        }
+      },
+      "title": "MemoryConfig",
+      "type": "object"
+    },
+    "ModelConfig": {
+      "additionalProperties": false,
+      "description": "Model provider and identifiers. Identifiers are set by the user for real providers.",
+      "properties": {
+        "large": {
+          "default": "large",
+          "title": "Large",
+          "type": "string"
+        },
+        "max_tokens": {
+          "default": 1024,
+          "minimum": 1,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "mock_script": {
+          "default": "",
+          "title": "Mock Script",
+          "type": "string"
+        },
+        "planner_tier": {
+          "default": "large",
+          "pattern": "^(small|large)$",
+          "title": "Planner Tier",
+          "type": "string"
+        },
+        "provider": {
+          "default": "mock",
+          "pattern": "^[a-z][a-z0-9_]{0,31}$",
+          "title": "Provider",
+          "type": "string"
+        },
+        "small": {
+          "default": "small",
+          "title": "Small",
+          "type": "string"
+        }
+      },
+      "title": "ModelConfig",
+      "type": "object"
+    },
+    "PluginsConfig": {
+      "additionalProperties": false,
+      "description": "Entry-point plugins to load. Only named plugins are ever imported.",
+      "properties": {
+        "enabled": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Enabled",
+          "type": "array"
+        }
+      },
+      "title": "PluginsConfig",
+      "type": "object"
+    },
+    "PolicyConfig": {
+      "additionalProperties": false,
+      "description": "Irreversible-action policy. Empty allow-list: every irreversible action goes to a human.",
+      "properties": {
+        "allow_irreversible": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allow Irreversible",
+          "type": "array"
+        },
+        "reversible_tools": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reversible Tools",
+          "type": "array"
+        }
+      },
+      "title": "PolicyConfig",
+      "type": "object"
+    },
+    "RedactionConfig": {
+      "additionalProperties": false,
+      "description": "Redaction tuning.",
+      "properties": {
+        "min_env_value_length": {
+          "default": 4,
+          "minimum": 1,
+          "title": "Min Env Value Length",
+          "type": "integer"
+        }
+      },
+      "title": "RedactionConfig",
+      "type": "object"
+    },
+    "RouterConfig": {
+      "additionalProperties": false,
+      "description": "Cost ladder and escalation thresholds.",
+      "properties": {
+        "agreement": {
+          "default": 0.67,
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Agreement",
+          "type": "number"
+        },
+        "irreversible_confidence": {
+          "default": 0.9,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Irreversible Confidence",
+          "type": "number"
+        },
+        "ladder": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ladder",
+          "type": "array"
+        },
+        "large_samples": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Large Samples",
+          "type": "integer"
+        },
+        "retries": {
+          "default": 1,
+          "minimum": 0,
+          "title": "Retries",
+          "type": "integer"
+        },
+        "samples": {
+          "default": 3,
+          "minimum": 1,
+          "title": "Samples",
+          "type": "integer"
+        }
+      },
+      "title": "RouterConfig",
+      "type": "object"
+    },
+    "RunnerConfig": {
+      "additionalProperties": false,
+      "description": "Runner limits.",
+      "properties": {
+        "max_open_steps": {
+          "default": 12,
+          "minimum": 1,
+          "title": "Max Open Steps",
+          "type": "integer"
+        }
+      },
+      "title": "RunnerConfig",
+      "type": "object"
+    },
+    "SkillsConfig": {
+      "additionalProperties": false,
+      "description": "Mining, shadow-testing, promotion and demotion thresholds.",
+      "properties": {
+        "auto_mine": {
+          "default": true,
+          "title": "Auto Mine",
+          "type": "boolean"
+        },
+        "auto_promote": {
+          "default": true,
+          "title": "Auto Promote",
+          "type": "boolean"
+        },
+        "demote_pass_rate": {
+          "default": 0.95,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Demote Pass Rate",
+          "type": "number"
+        },
+        "demote_window": {
+          "default": 20,
+          "minimum": 1,
+          "title": "Demote Window",
+          "type": "integer"
+        },
+        "min_repeats": {
+          "default": 3,
+          "minimum": 2,
+          "title": "Min Repeats",
+          "type": "integer"
+        },
+        "min_shadow_runs": {
+          "default": 20,
+          "minimum": 1,
+          "title": "Min Shadow Runs",
+          "type": "integer"
+        },
+        "min_template_length": {
+          "default": 3,
+          "minimum": 1,
+          "title": "Min Template Length",
+          "type": "integer"
+        },
+        "promote_pass_rate": {
+          "default": 0.98,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Promote Pass Rate",
+          "type": "number"
+        }
+      },
+      "title": "SkillsConfig",
+      "type": "object"
+    },
+    "ToolsConfig": {
+      "additionalProperties": false,
+      "description": "Sandbox limits for tools.",
+      "properties": {
+        "allowed_executables": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Executables",
+          "type": "array"
+        },
+        "env_allowlist": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Env Allowlist",
+          "type": "array"
+        },
+        "max_file_bytes": {
+          "default": 1000000,
+          "minimum": 1,
+          "title": "Max File Bytes",
+          "type": "integer"
+        },
+        "max_output_bytes": {
+          "default": 65536,
+          "minimum": 256,
+          "title": "Max Output Bytes",
+          "type": "integer"
+        },
+        "protected_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Protected Paths",
+          "type": "array"
+        },
+        "timeout_seconds": {
+          "default": 60,
+          "minimum": 1,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        }
+      },
+      "title": "ToolsConfig",
+      "type": "object"
+    },
+    "WorkspaceConfig": {
+      "additionalProperties": false,
+      "description": "Workspace layout.",
+      "properties": {
+        "state_dir": {
+          "default": ".crystallizer",
+          "title": "State Dir",
+          "type": "string"
+        }
+      },
+      "title": "WorkspaceConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Complete, validated configuration.",
+  "properties": {
+    "active_profile": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Active Profile"
+    },
+    "budget": {
+      "$ref": "#/$defs/BudgetConfig"
+    },
+    "context": {
+      "$ref": "#/$defs/ContextConfig"
+    },
+    "cost": {
+      "$ref": "#/$defs/CostConfig"
+    },
+    "memory": {
+      "$ref": "#/$defs/MemoryConfig"
+    },
+    "model": {
+      "$ref": "#/$defs/ModelConfig"
+    },
+    "plugins": {
+      "$ref": "#/$defs/PluginsConfig"
+    },
+    "policy": {
+      "$ref": "#/$defs/PolicyConfig"
+    },
+    "profile": {
+      "additionalProperties": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Profile",
+      "type": "object"
+    },
+    "redaction": {
+      "$ref": "#/$defs/RedactionConfig"
+    },
+    "router": {
+      "$ref": "#/$defs/RouterConfig"
+    },
+    "runner": {
+      "$ref": "#/$defs/RunnerConfig"
+    },
+    "skills": {
+      "$ref": "#/$defs/SkillsConfig"
+    },
+    "tools": {
+      "$ref": "#/$defs/ToolsConfig"
+    },
+    "workspace": {
+      "$ref": "#/$defs/WorkspaceConfig"
+    }
+  },
+  "title": "Config",
+  "type": "object"
+}

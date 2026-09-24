@@ -1,0 +1,273 @@
+{
+  "$defs": {
+    "Action": {
+      "additionalProperties": false,
+      "description": "One tool invocation: a tool name and its arguments.",
+      "properties": {
+        "args": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "title": "Args",
+          "type": "object"
+        },
+        "tool": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tool"
+      ],
+      "title": "Action",
+      "type": "object"
+    },
+    "Situation": {
+      "additionalProperties": false,
+      "description": "What is known before a step is routed. Field paths are dotted (``params.name``).",
+      "properties": {
+        "params": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Params",
+          "type": "object"
+        },
+        "step_index": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Step Index",
+          "type": "integer"
+        },
+        "step_kind": {
+          "title": "Step Kind",
+          "type": "string"
+        },
+        "task_kind": {
+          "title": "Task Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_kind",
+        "step_kind"
+      ],
+      "title": "Situation",
+      "type": "object"
+    },
+    "StepResult": {
+      "additionalProperties": false,
+      "description": "Recorded outcome of one executed step.",
+      "properties": {
+        "checks_passed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checks Passed"
+        },
+        "exit_code": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exit Code"
+        },
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "output_hash": {
+          "title": "Output Hash",
+          "type": "string"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ok",
+        "output_hash"
+      ],
+      "title": "StepResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One executed step as recorded in the append-only trace log.",
+  "properties": {
+    "action": {
+      "$ref": "#/$defs/Action"
+    },
+    "attempt": {
+      "minimum": 1,
+      "title": "Attempt",
+      "type": "integer"
+    },
+    "cost": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Cost",
+      "type": "number"
+    },
+    "escalation_path": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Escalation Path",
+      "type": "array"
+    },
+    "escalation_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Escalation Reason"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "index": {
+      "minimum": 0,
+      "title": "Index",
+      "type": "integer"
+    },
+    "model_calls": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Model Calls",
+      "type": "integer"
+    },
+    "redacted": {
+      "default": false,
+      "title": "Redacted",
+      "type": "boolean"
+    },
+    "replayed": {
+      "default": false,
+      "title": "Replayed",
+      "type": "boolean"
+    },
+    "result": {
+      "$ref": "#/$defs/StepResult"
+    },
+    "route": {
+      "pattern": "^[a-z][a-z0-9_]{0,31}$",
+      "title": "Route",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "situation": {
+      "$ref": "#/$defs/Situation"
+    },
+    "skill_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Key"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "tokens_in": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Tokens In",
+      "type": "integer"
+    },
+    "tokens_out": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Tokens Out",
+      "type": "integer"
+    },
+    "ts": {
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "const": "step",
+      "default": "step",
+      "title": "Type",
+      "type": "string"
+    },
+    "verified": {
+      "default": false,
+      "title": "Verified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "run_id",
+    "task_id",
+    "attempt",
+    "index",
+    "ts",
+    "situation",
+    "action",
+    "result",
+    "route"
+  ],
+  "title": "TraceStep",
+  "type": "object"
+}

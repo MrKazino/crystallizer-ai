@@ -1,0 +1,149 @@
+{
+  "$defs": {
+    "StepSpec": {
+      "additionalProperties": false,
+      "description": "A planned step: its kind (used for routing and mining) and a short description.",
+      "properties": {
+        "description": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Description",
+          "type": "string"
+        },
+        "kind": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.\\-]{0,63}$",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "StepSpec",
+      "type": "object"
+    },
+    "Task": {
+      "additionalProperties": false,
+      "description": "A unit of work in the plan DAG.",
+      "properties": {
+        "acceptance_commands": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Acceptance Commands",
+          "type": "array"
+        },
+        "attempts": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "depends_on": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.\\-]{0,127}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.\\-]{0,63}$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Params",
+          "type": "object"
+        },
+        "state": {
+          "$ref": "#/$defs/TaskState",
+          "default": "pending"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/StepSpec"
+          },
+          "title": "Steps",
+          "type": "array"
+        },
+        "title": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind"
+      ],
+      "title": "Task",
+      "type": "object"
+    },
+    "TaskState": {
+      "description": "Lifecycle state of a task.",
+      "enum": [
+        "pending",
+        "running",
+        "done",
+        "failed",
+        "blocked"
+      ],
+      "title": "TaskState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A goal decomposed into a DAG of tasks.",
+  "properties": {
+    "goal": {
+      "minLength": 1,
+      "title": "Goal",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/Task"
+      },
+      "minItems": 1,
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "goal",
+    "tasks"
+  ],
+  "title": "Plan",
+  "type": "object"
+}

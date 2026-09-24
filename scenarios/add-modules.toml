@@ -1,0 +1,72 @@
+# add-modules: 4 modules per run. Per module: scaffold the source and the test from templates,
+# write the function body (model-authored, non-mechanical), stage both files and commit.
+# 5 steps per module (4 mechanical), 20 steps per run (16 mechanical). The commit step sets
+# small_correct = false, so the small tier disagrees and the large tier answers (4 per run).
+name = "add-modules"
+description = "Scaffold, implement, stage and commit four new modules per run"
+seed = 7
+tasks_per_run = 4
+task_kind = "add_module"
+task_id = "add-{name}"
+title = "Add module {name}"
+acceptance = [["python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/test_{name}.py"]]
+
+[params]
+name = ["lexer", "emitter", "checker", "loader", "writer", "reader", "mapper", "scanner",
+        "builder", "walker", "linker", "merger", "sorter", "ranker", "folder", "joiner"]
+
+[[fixture]]
+path = "pyproject.toml"
+content = """[tool.pytest.ini_options]
+pythonpath = ["src"]
+"""
+
+[[fixture]]
+path = "src/.keep"
+content = ""
+
+[[step]]
+kind = "scaffold_src"
+tool = "file_write"
+args = { path = "src/{name}.py", content = "def {name}() -> int:\n    raise NotImplementedError\n" }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+description = "scaffold src/{name}.py from the module template"
+
+[[step]]
+kind = "scaffold_test"
+tool = "file_write"
+args = { path = "tests/test_{name}.py", content = "from {name} import {name}\n\n\ndef test_{name}_returns_int() -> None:\n    assert isinstance({name}(), int)\n" }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+description = "scaffold tests/test_{name}.py from the test template"
+
+[[step]]
+kind = "implement"
+tool = "file_write"
+args = { path = "src/{name}.py", content = "def {name}() -> int:\n    return {rand}\n" }
+mechanical = false
+tokens_in = 1200
+tokens_out = 400
+description = "write the body of {name}"
+
+[[step]]
+kind = "stage"
+tool = "shell"
+args = { argv = ["git", "add", "src/{name}.py", "tests/test_{name}.py"] }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+description = "stage the new files"
+
+[[step]]
+kind = "commit"
+tool = "shell"
+args = { argv = ["git", "commit", "-q", "-m", "add {name}"] }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+small_correct = false
+description = "commit with message add {name}"

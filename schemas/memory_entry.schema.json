@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "MemoryKind": {
+      "description": "Kinds of memory entries.",
+      "enum": [
+        "decision",
+        "note",
+        "fact",
+        "task"
+      ],
+      "title": "MemoryKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One project memory entry. Entries are archived, never deleted.",
+  "properties": {
+    "archived": {
+      "default": false,
+      "title": "Archived",
+      "type": "boolean"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "integer"
+    },
+    "kind": {
+      "$ref": "#/$defs/MemoryKind"
+    },
+    "source_task": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Task"
+    },
+    "summary_of": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Summary Of",
+      "type": "array"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "kind",
+    "text",
+    "created_at"
+  ],
+  "title": "MemoryEntry",
+  "type": "object"
+}

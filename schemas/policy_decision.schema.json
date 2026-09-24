@@ -1,0 +1,40 @@
+{
+  "$defs": {
+    "Reversibility": {
+      "description": "Policy classification of an action.",
+      "enum": [
+        "reversible",
+        "irreversible"
+      ],
+      "title": "Reversibility",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Result of classifying an action.",
+  "properties": {
+    "action_name": {
+      "title": "Action Name",
+      "type": "string"
+    },
+    "classification": {
+      "$ref": "#/$defs/Reversibility"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "requires_human": {
+      "default": false,
+      "title": "Requires Human",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "action_name",
+    "classification",
+    "reason"
+  ],
+  "title": "PolicyDecision",
+  "type": "object"
+}

@@ -1,0 +1,40 @@
+{
+  "additionalProperties": false,
+  "description": "One tool invocation: a tool name and its arguments.",
+  "properties": {
+    "args": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        ]
+      },
+      "title": "Args",
+      "type": "object"
+    },
+    "tool": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Tool",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tool"
+  ],
+  "title": "Action",
+  "type": "object"
+}

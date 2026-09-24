@@ -1,0 +1,195 @@
+{
+  "$defs": {
+    "BenchRun": {
+      "additionalProperties": false,
+      "description": "Metrics of one benchmark run.",
+      "properties": {
+        "acceptance_pass_rate": {
+          "title": "Acceptance Pass Rate",
+          "type": "number"
+        },
+        "cost": {
+          "title": "Cost",
+          "type": "number"
+        },
+        "exit_code": {
+          "title": "Exit Code",
+          "type": "integer"
+        },
+        "mechanical_steps": {
+          "title": "Mechanical Steps",
+          "type": "integer"
+        },
+        "model_calls": {
+          "title": "Model Calls",
+          "type": "integer"
+        },
+        "route_mix": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Route Mix",
+          "type": "object"
+        },
+        "run": {
+          "title": "Run",
+          "type": "integer"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "skill_steps": {
+          "title": "Skill Steps",
+          "type": "integer"
+        },
+        "skills": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Skills",
+          "type": "object"
+        },
+        "steps": {
+          "title": "Steps",
+          "type": "integer"
+        },
+        "tasks": {
+          "title": "Tasks",
+          "type": "integer"
+        },
+        "tokens_in": {
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "run",
+        "run_id",
+        "cost",
+        "tokens_in",
+        "tokens_out",
+        "model_calls",
+        "route_mix",
+        "skills",
+        "acceptance_pass_rate",
+        "tasks",
+        "steps",
+        "mechanical_steps",
+        "skill_steps",
+        "exit_code"
+      ],
+      "title": "BenchRun",
+      "type": "object"
+    },
+    "BenchSummary": {
+      "additionalProperties": false,
+      "description": "Cross-run summary.",
+      "properties": {
+        "acceptance_pass_rate": {
+          "title": "Acceptance Pass Rate",
+          "type": "number"
+        },
+        "cost_first": {
+          "title": "Cost First",
+          "type": "number"
+        },
+        "cost_last": {
+          "title": "Cost Last",
+          "type": "number"
+        },
+        "cost_ratio": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Cost Ratio"
+        },
+        "first_run_with_active_skill": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "First Run With Active Skill"
+        },
+        "total_cost": {
+          "title": "Total Cost",
+          "type": "number"
+        }
+      },
+      "required": [
+        "cost_first",
+        "cost_last",
+        "cost_ratio",
+        "first_run_with_active_skill",
+        "acceptance_pass_rate",
+        "total_cost"
+      ],
+      "title": "BenchSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Benchmark output.",
+  "properties": {
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "note": {
+      "default": "MockModel benchmark: proves routing, mining, shadow-testing and promotion mechanics; it does not prove cost savings with a real model.",
+      "title": "Note",
+      "type": "string"
+    },
+    "profile": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Profile"
+    },
+    "runs": {
+      "items": {
+        "$ref": "#/$defs/BenchRun"
+      },
+      "title": "Runs",
+      "type": "array"
+    },
+    "scenario": {
+      "title": "Scenario",
+      "type": "string"
+    },
+    "seed": {
+      "title": "Seed",
+      "type": "integer"
+    },
+    "summary": {
+      "$ref": "#/$defs/BenchSummary"
+    }
+  },
+  "required": [
+    "scenario",
+    "description",
+    "seed",
+    "profile",
+    "summary"
+  ],
+  "title": "BenchReport",
+  "type": "object"
+}

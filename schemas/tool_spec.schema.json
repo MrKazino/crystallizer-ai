@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "description": "Descriptor of a tool, exportable as a function-calling style JSON Schema.",
+  "properties": {
+    "args_schema": {
+      "additionalProperties": true,
+      "title": "Args Schema",
+      "type": "object"
+    },
+    "builtin": {
+      "default": true,
+      "title": "Builtin",
+      "type": "boolean"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "name": {
+      "pattern": "^[a-z][a-z0-9_]{0,63}$",
+      "title": "Name",
+      "type": "string"
+    },
+    "reversible": {
+      "title": "Reversible",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "args_schema",
+    "reversible"
+  ],
+  "title": "ToolSpec",
+  "type": "object"
+}

@@ -1,0 +1,131 @@
+{
+  "$defs": {
+    "RouteCost": {
+      "additionalProperties": false,
+      "description": "Totals for one route.",
+      "properties": {
+        "cost": {
+          "default": 0.0,
+          "title": "Cost",
+          "type": "number"
+        },
+        "model_calls": {
+          "default": 0,
+          "title": "Model Calls",
+          "type": "integer"
+        },
+        "steps": {
+          "default": 0,
+          "title": "Steps",
+          "type": "integer"
+        },
+        "tokens_in": {
+          "default": 0,
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "default": 0,
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "title": "RouteCost",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "description": "Token, cost and call totals.",
+      "properties": {
+        "cost": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Cost",
+          "type": "number"
+        },
+        "model_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Model Calls",
+          "type": "integer"
+        },
+        "tokens_in": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "title": "Usage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Result of ``report``.",
+  "properties": {
+    "baseline_cost": {
+      "title": "Baseline Cost",
+      "type": "number"
+    },
+    "by_route": {
+      "additionalProperties": {
+        "$ref": "#/$defs/RouteCost"
+      },
+      "title": "By Route",
+      "type": "object"
+    },
+    "estimated_saving": {
+      "title": "Estimated Saving",
+      "type": "number"
+    },
+    "note": {
+      "title": "Note",
+      "type": "string"
+    },
+    "overhead": {
+      "$ref": "#/$defs/Usage"
+    },
+    "runs": {
+      "title": "Runs",
+      "type": "integer"
+    },
+    "saving_pct": {
+      "title": "Saving Pct",
+      "type": "number"
+    },
+    "skills": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Skills",
+      "type": "object"
+    },
+    "steps": {
+      "title": "Steps",
+      "type": "integer"
+    },
+    "total": {
+      "$ref": "#/$defs/Usage"
+    }
+  },
+  "required": [
+    "runs",
+    "steps",
+    "by_route",
+    "overhead",
+    "total",
+    "skills",
+    "baseline_cost",
+    "estimated_saving",
+    "saving_pct",
+    "note"
+  ],
+  "title": "CostReport",
+  "type": "object"
+}

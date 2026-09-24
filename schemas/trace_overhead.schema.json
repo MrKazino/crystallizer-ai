@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "Usage": {
+      "additionalProperties": false,
+      "description": "Token, cost and call totals.",
+      "properties": {
+        "cost": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Cost",
+          "type": "number"
+        },
+        "model_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Model Calls",
+          "type": "integer"
+        },
+        "tokens_in": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "title": "Usage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Usage spent at a step position that executed nothing (failed routing, ``done``,\nor a run interrupted by the budget or a human).",
+  "properties": {
+    "attempt": {
+      "minimum": 1,
+      "title": "Attempt",
+      "type": "integer"
+    },
+    "index": {
+      "minimum": 0,
+      "title": "Index",
+      "type": "integer"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "ts": {
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "const": "overhead",
+      "default": "overhead",
+      "title": "Type",
+      "type": "string"
+    },
+    "usage": {
+      "$ref": "#/$defs/Usage"
+    }
+  },
+  "required": [
+    "run_id",
+    "task_id",
+    "attempt",
+    "index",
+    "ts",
+    "reason",
+    "usage"
+  ],
+  "title": "TraceOverhead",
+  "type": "object"
+}

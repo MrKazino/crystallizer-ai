@@ -1,0 +1,46 @@
+{
+  "additionalProperties": false,
+  "description": "What is known before a step is routed. Field paths are dotted (``params.name``).",
+  "properties": {
+    "params": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "title": "Params",
+      "type": "object"
+    },
+    "step_index": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Step Index",
+      "type": "integer"
+    },
+    "step_kind": {
+      "title": "Step Kind",
+      "type": "string"
+    },
+    "task_kind": {
+      "title": "Task Kind",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_kind",
+    "step_kind"
+  ],
+  "title": "Situation",
+  "type": "object"
+}

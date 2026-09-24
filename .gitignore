@@ -1,0 +1,13 @@
+.crystallizer/
+__pycache__/
+.venv/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dist/
+*.egg-info/
+.env
+build/
+.hypothesis/

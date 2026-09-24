@@ -1,0 +1,4 @@
+# Quickstart workspace: the scripted MockModel answers from mock_script.json (no API key needed).
+[model]
+provider = "mock"
+mock_script = "mock_script.json"

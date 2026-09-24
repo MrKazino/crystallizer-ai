@@ -1,0 +1,66 @@
+# fix-tests: 4 failing tests per run. Per test: one model-authored fix, then a mechanical
+# rerun-and-commit sequence (run the test, stage, commit). 16 steps per run, 12 mechanical.
+# The commit step sets small_correct = false (4 per run).
+name = "fix-tests"
+description = "Fix four failing functions and commit each fix"
+seed = 11
+tasks_per_run = 4
+task_kind = "fix_test"
+task_id = "fix-{name}"
+title = "Fix failing test for {name}"
+acceptance = [["python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/test_{name}.py"]]
+
+[params]
+name = ["adder", "summer", "totaler", "plusser", "joiner", "gatherer", "combiner", "tallier",
+        "counter_up", "stacker", "piler", "heaper", "amasser", "collector", "pooler", "banker"]
+
+[[fixture]]
+path = "pyproject.toml"
+content = """[tool.pytest.ini_options]
+pythonpath = ["src"]
+"""
+
+[[task_fixture]]
+path = "src/{name}.py"
+content = "def {name}(a: int, b: int) -> int:\n    return a - b\n"
+
+[[task_fixture]]
+path = "tests/test_{name}.py"
+content = "from {name} import {name}\n\n\ndef test_{name}() -> None:\n    assert {name}(2, 3) == 5\n"
+
+[[step]]
+kind = "fix"
+tool = "file_write"
+args = { path = "src/{name}.py", content = "def {name}(a: int, b: int) -> int:\n    # fix {rand}\n    return a + b\n" }
+mechanical = false
+tokens_in = 1200
+tokens_out = 400
+description = "fix the bug in {name}"
+
+[[step]]
+kind = "rerun"
+tool = "run_tests"
+args = { args = ["-q", "-p", "no:cacheprovider", "tests/test_{name}.py"] }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+description = "rerun tests/test_{name}.py"
+
+[[step]]
+kind = "stage"
+tool = "shell"
+args = { argv = ["git", "add", "src/{name}.py"] }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+description = "stage the fix"
+
+[[step]]
+kind = "commit"
+tool = "shell"
+args = { argv = ["git", "commit", "-q", "-m", "fix {name}"] }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+small_correct = false
+description = "commit with message fix {name}"

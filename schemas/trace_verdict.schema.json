@@ -1,0 +1,49 @@
+{
+  "additionalProperties": false,
+  "description": "Acceptance verdict for one task attempt; marks that attempt's steps verified or not.",
+  "properties": {
+    "attempt": {
+      "minimum": 1,
+      "title": "Attempt",
+      "type": "integer"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "step_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Step Ids",
+      "type": "array"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "ts": {
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "const": "verdict",
+      "default": "verdict",
+      "title": "Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "task_id",
+    "attempt",
+    "passed",
+    "ts"
+  ],
+  "title": "TraceVerdict",
+  "type": "object"
+}

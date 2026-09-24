@@ -1,0 +1,172 @@
+{
+  "$defs": {
+    "HistoryEvent": {
+      "additionalProperties": false,
+      "description": "A lifecycle event with the evidence that justified it.",
+      "properties": {
+        "event": {
+          "enum": [
+            "created",
+            "imported",
+            "promoted",
+            "demoted"
+          ],
+          "title": "Event",
+          "type": "string"
+        },
+        "evidence": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Evidence",
+          "type": "object"
+        },
+        "forced": {
+          "default": false,
+          "title": "Forced",
+          "type": "boolean"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "ts": {
+          "title": "Ts",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ts",
+        "event",
+        "reason"
+      ],
+      "title": "HistoryEvent",
+      "type": "object"
+    },
+    "SkillStatus": {
+      "description": "Lifecycle status of a skill.",
+      "enum": [
+        "candidate",
+        "active",
+        "demoted"
+      ],
+      "title": "SkillStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Registry record for one skill version.",
+  "properties": {
+    "content_hash": {
+      "title": "Content Hash",
+      "type": "string"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "derived_runs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Derived Runs",
+      "type": "array"
+    },
+    "guard_summary": {
+      "title": "Guard Summary",
+      "type": "string"
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/HistoryEvent"
+      },
+      "title": "History",
+      "type": "array"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "live_passes": {
+      "default": 0,
+      "title": "Live Passes",
+      "type": "integer"
+    },
+    "live_runs": {
+      "default": 0,
+      "title": "Live Runs",
+      "type": "integer"
+    },
+    "origin": {
+      "default": "mined",
+      "enum": [
+        "mined",
+        "imported"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "pass_rate": {
+      "default": 0.0,
+      "title": "Pass Rate",
+      "type": "number"
+    },
+    "provenance": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Provenance",
+      "type": "array"
+    },
+    "shadow_passes": {
+      "default": 0,
+      "title": "Shadow Passes",
+      "type": "integer"
+    },
+    "shadow_runs": {
+      "default": 0,
+      "title": "Shadow Runs",
+      "type": "integer"
+    },
+    "source_file": {
+      "title": "Source File",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/SkillStatus",
+      "default": "candidate"
+    },
+    "unsafe_diffs": {
+      "default": 0,
+      "title": "Unsafe Diffs",
+      "type": "integer"
+    },
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "content_hash",
+    "guard_summary",
+    "source_file",
+    "created_at"
+  ],
+  "title": "SkillManifest",
+  "type": "object"
+}

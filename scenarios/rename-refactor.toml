@@ -1,0 +1,68 @@
+# rename-refactor: rename 4 symbols per run. Per symbol: search, replace across source files and
+# run the symbol's tests (3 mechanical steps), then write a review note (non-mechanical).
+# 16 steps per run, 12 mechanical. The search step sets small_correct = false (4 per run).
+name = "rename-refactor"
+description = "Rename four symbols across files and record a review note for each"
+seed = 13
+tasks_per_run = 4
+task_kind = "rename_symbol"
+task_id = "rename-{old}"
+title = "Rename {old} to {new}"
+acceptance = [["python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/test_{new}.py"]]
+
+[params]
+old = ["compute_total", "load_items", "parse_line", "render_page", "count_words", "merge_maps",
+       "split_path", "read_config", "write_report", "build_index", "scan_tokens", "sort_rows"]
+new = ["calculate_total", "fetch_items", "decode_line", "draw_page", "tally_words", "combine_maps",
+       "divide_path", "load_settings", "emit_report", "make_index", "lex_tokens", "order_rows"]
+
+[[fixture]]
+path = "pyproject.toml"
+content = """[tool.pytest.ini_options]
+pythonpath = ["src"]
+"""
+
+[[task_fixture]]
+path = "src/module_{index}.py"
+content = "def {old}() -> int:\n    return {index}\n\n\ndef uses_{index}() -> int:\n    return {old}() + 1\n"
+
+[[task_fixture]]
+path = "tests/test_{new}.py"
+content = "from module_{index} import {new}\n\n\ndef test_{new}() -> None:\n    assert {new}() == {index}\n"
+
+[[step]]
+kind = "search"
+tool = "file_search"
+args = { query = "{old}", glob = "src/*.py" }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+small_correct = false
+description = "find uses of {old}"
+
+[[step]]
+kind = "replace"
+tool = "file_replace"
+args = { glob = "src/*.py", old = "{old}", new = "{new}", word = true }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+description = "replace {old} with {new}"
+
+[[step]]
+kind = "test"
+tool = "run_tests"
+args = { args = ["-q", "-p", "no:cacheprovider", "tests/test_{new}.py"] }
+mechanical = true
+tokens_in = 600
+tokens_out = 150
+description = "run tests/test_{new}.py"
+
+[[step]]
+kind = "review"
+tool = "file_write"
+args = { path = "notes/{new}.md", content = "Renamed {old} to {new}. Review ticket {rand}.\n" }
+mechanical = false
+tokens_in = 1200
+tokens_out = 400
+description = "write a review note for {new}"
